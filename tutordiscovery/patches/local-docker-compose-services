@@ -21,4 +21,3 @@ discovery-worker:
     - ../plugins/discovery/apps/settings/tutor:/openedx/discovery/course_discovery/settings/tutor:ro
   depends_on:
     - discovery 
-    

@@ -14,4 +14,3 @@ discovery:
 discovery-worker:
   environment:
     DJANGO_SETTINGS_MODULE: course_discovery.settings.tutor.development
-    
