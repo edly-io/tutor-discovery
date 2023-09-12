@@ -9,3 +9,16 @@ discovery:
     - lms
     {% if RUN_MYSQL %}- mysql{% endif %}
     {% if RUN_ELASTICSEARCH %}- elasticsearch{% endif %}
+
+discovery-worker:
+  image: {{ DISCOVERY_DOCKER_IMAGE }}
+  environment:
+    SERVICE_VARIANT: discovery
+    DJANGO_SETTINGS_MODULE: course_discovery.settings.tutor.production
+  command: celery --app=course_discovery.celery worker --loglevel=info --max-tasks-per-child=100 
+  restart: unless-stopped
+  volumes:
+    - ../plugins/discovery/apps/settings/tutor:/openedx/discovery/course_discovery/settings/tutor:ro
+  depends_on:
+    - discovery 
+    
