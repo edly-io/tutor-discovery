@@ -10,3 +10,7 @@ discovery:
     default:
       aliases:
         - "{{ DISCOVERY_HOST }}"
+
+discovery-worker:
+  environment:
+    DJANGO_SETTINGS_MODULE: course_discovery.settings.tutor.development
