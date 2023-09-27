@@ -9,7 +9,10 @@ make migrate
   --lms-url="http://lms:8000" \
   --studio-url="http://cms:8000" \
   --courses-api-url "http://{{ LMS_HOST }}:8000/api/courses/v1/" \
-  --organizations-api-url "http://{{ LMS_HOST }}:8000/api/organizations/v1/"
+  --organizations-api-url "http://{{ LMS_HOST }}:8000/api/organizations/v1/" \
+  --lms-coursemode-api-url "http://{{ LMS_HOST }}:8000/api/course_modes/v1/" \
+  --marketing-site-api-url "http://{{ WORDPRESS_HOST }}:8000/wp-json/" \
+  --marketing-site-url-root "http://{{ WORDPRESS_HOST }}:8000"
 
 # Production partner
 ./manage.py create_or_update_partner  \
@@ -20,7 +23,10 @@ make migrate
   --lms-url="http://lms:8000" \
   --studio-url="http://cms:8000" \
   --courses-api-url "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/api/courses/v1/" \
-  --organizations-api-url "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/api/organizations/v1/"
+  --organizations-api-url "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/api/organizations/v1/" \
+  --lms-coursemode-api-url "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}/api/course_modes/v1/" \
+  --marketing-site-api-url "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ WORDPRESS_HOST }}/wp-json/" \
+  --marketing-site-url-root "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ WORDPRESS_HOST }}" 
 
 ./manage.py refresh_course_metadata --partner_code=$DEFAULT_PARTNER_CODE
 ./manage.py update_index --disable-change-limit
