@@ -1,0 +1,48 @@
+---
+# Refresh course metadata and index update with every 5 mins cron
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: discovery-refresh-course-metadata-and-index
+  labels:
+    app.kubernetes.io/name: discovery-refresh-course-metadata-and-index
+    app.kubernetes.io/component: cronjob
+spec:
+  # Cron of every 5 mins
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: discovery-cronjobs
+        spec:
+          containers:
+          - name: discovery-cronjobs-refresh-course-metadata
+            image: {{ DISCOVERY_DOCKER_IMAGE }}
+            imagePullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+              - /openedx/discovery/manage.py refresh_course_metadata --partner_code=openedx
+            volumeMounts:
+              - mountPath: /openedx/discovery/course_discovery/settings/tutor/production.py
+                name: settings
+                subPath: production.py
+
+          - name: discovery-cronjobs-update-index
+            image: {{ DISCOVERY_DOCKER_IMAGE }}
+            imagePullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - -c
+              - /openedx/discovery/manage.py update_index --disable-change-limit
+            volumeMounts:
+              - mountPath: /openedx/discovery/course_discovery/settings/tutor/production.py
+                name: settings
+                subPath: production.py
+          volumes:
+          - name: settings
+            configMap:
+              name: discovery-settings
+          restartPolicy: OnFailure
