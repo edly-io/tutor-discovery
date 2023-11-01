@@ -3,9 +3,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: discovery-refresh-course-metadata-and-index
+  name: discovery-refresh-course-metadata
   labels:
-    app.kubernetes.io/name: discovery-refresh-course-metadata-and-index
+    app.kubernetes.io/name: discovery-refresh-course-metadata
     app.kubernetes.io/component: cronjob
 spec:
   # Cron of every 10 mins
@@ -29,7 +29,31 @@ spec:
               - mountPath: /openedx/discovery/course_discovery/settings/tutor/production.py
                 name: settings
                 subPath: production.py
+          volumes:
+          - name: settings
+            configMap:
+              name: discovery-settings
+          restartPolicy: OnFailure
 
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: discovery-update-index
+  labels:
+    app.kubernetes.io/name: discovery-update-index
+    app.kubernetes.io/component: cronjob
+spec:
+  # Cron of every 10 mins
+  schedule: "10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: discovery-cronjobs
+        spec:
+          containers:
           - name: discovery-cronjobs-update-index
             image: {{ DISCOVERY_DOCKER_IMAGE }}
             imagePullPolicy: IfNotPresent
@@ -67,7 +91,7 @@ spec:
             app: discovery-cronjobs
         spec:
           containers:
-          - name: discovery-cronjobs-refresh-course-metadata
+          - name: discovery-cronjobs-remove-unuses-indexes
             image: {{ DISCOVERY_DOCKER_IMAGE }}
             imagePullPolicy: IfNotPresent
             command:
