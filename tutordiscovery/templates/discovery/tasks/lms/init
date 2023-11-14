@@ -12,7 +12,7 @@
 # Development client
 ./manage.py lms create_dot_application \
     --grant-type client-credentials \
-    --redirect-uris "http://{{ DISCOVERY_HOST }}:8381/complete/edx-oauth2/" \
+    --redirect-uris "http://{{ DISCOVERY_HOST }}:8381/complete/edx-oauth2/ {% for multisite_host in MULTISITE_HOSTS %}http://{{ multisite_host }}-{{ DISCOVERY_HOST }}:8381/complete/edx-oauth2/ {% endfor %}" \
     --client-id {{ DISCOVERY_OAUTH2_KEY_DEV }} \
     --client-secret {{ DISCOVERY_OAUTH2_SECRET }} \
     --scopes user_id \
@@ -22,7 +22,7 @@
     discovery
 ./manage.py lms create_dot_application \
     --grant-type authorization-code \
-    --redirect-uris "http://{{ DISCOVERY_HOST }}:8381/complete/edx-oauth2/" \
+    --redirect-uris "http://{{ DISCOVERY_HOST }}:8381/complete/edx-oauth2/ {% for multisite_host in MULTISITE_HOSTS %}http://{{ multisite_host }}-{{ DISCOVERY_HOST }}:8381/complete/edx-oauth2/ {% endfor %}" \
     --client-id {{ DISCOVERY_OAUTH2_KEY_SSO_DEV }} \
     --client-secret {{ DISCOVERY_OAUTH2_SECRET_SSO }} \
     --scopes user_id \
@@ -34,7 +34,7 @@
 # Production client
 ./manage.py lms create_dot_application \
     --grant-type client-credentials \
-    --redirect-uris "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ DISCOVERY_HOST }}/complete/edx-oauth2/" \
+    --redirect-uris "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ DISCOVERY_HOST }}/complete/edx-oauth2/ {% for multisite_host in MULTISITE_HOSTS %}{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ multisite_host }}-{{ DISCOVERY_HOST }}/complete/edx-oauth2/ {% endfor %}" \
     --client-id {{ DISCOVERY_OAUTH2_KEY }} \
     --client-secret {{ DISCOVERY_OAUTH2_SECRET }} \
     --scopes user_id \
@@ -44,7 +44,7 @@
     discovery
 ./manage.py lms create_dot_application \
     --grant-type authorization-code \
-    --redirect-uris "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ DISCOVERY_HOST }}/complete/edx-oauth2/" \
+    --redirect-uris "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ DISCOVERY_HOST }}/complete/edx-oauth2/ {% for multisite_host in MULTISITE_HOSTS %}{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ multisite_host }}-{{ DISCOVERY_HOST }}/complete/edx-oauth2/ {% endfor %}" \
     --client-id {{ DISCOVERY_OAUTH2_KEY_SSO }} \
     --client-secret {{ DISCOVERY_OAUTH2_SECRET_SSO }} \
     --scopes user_id \

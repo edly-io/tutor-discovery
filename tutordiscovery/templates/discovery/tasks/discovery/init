@@ -1,5 +1,6 @@
 make migrate
 
+{% if CREATE_DEV_SITES %}
 # Development partners
 ./manage.py create_or_update_partner  \
   --site-id 1 \
@@ -13,6 +14,7 @@ make migrate
   --lms-coursemode-api-url "http://{{ LMS_HOST }}:8000/api/course_modes/v1/" \
   --marketing-site-api-url "http://{{ WORDPRESS_HOST }}:8000/wp-json/" \
   --marketing-site-url-root "http://{{ WORDPRESS_HOST }}:8000"
+{% endif %}
 
 # Production partner
 ./manage.py create_or_update_partner  \
